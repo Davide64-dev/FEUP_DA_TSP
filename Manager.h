@@ -20,6 +20,8 @@ public:
 
     Manager(std::string name, std::string dataset);
 
+    double haversine(double latitudeFirst, double longitudeFirst, double latitudeSecond, double longitudeSecond);
+
 };
 
 
