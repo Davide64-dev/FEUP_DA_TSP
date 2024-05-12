@@ -27,6 +27,9 @@ public:
 
     Graph<int> createGraph();
 
+    // TODO: add unordered_map to save the vertices' coordinates
+    std::unordered_map<int, std::pair<double, double>> getCoordinates();
+
 };
 
 #endif //DA_PROJ1_GRAPHCONSTRUCTOR_H

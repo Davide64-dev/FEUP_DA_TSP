@@ -22,6 +22,9 @@ public:
 
     double haversine(double latitudeFirst, double longitudeFirst, double latitudeSecond, double longitudeSecond);
 
+    Graph<int> prim();
+
+
 };
 
 
