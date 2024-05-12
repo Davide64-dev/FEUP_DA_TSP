@@ -11,19 +11,22 @@
 
 class GraphConstructor {
 private:
+    std::string dataset;
     std::string edgesFile;
     std::string verticiesFile;
 
-    void parseAndAddVertex(std::string line);
+    int parseFirstVertex(std::string line);
+    int parseSecondVertex(std::string line);
 
-    void parseAndAddEdge(std::string line);
+    double parseEdge(std::string line, int& first, int& second);
 
 public:
-    GraphConstructor(std::string edgesFile, std::string verticiesFile);
+    GraphConstructor(std::string dataset);
 
     GraphConstructor();
 
-    Graph<std::string> createGraph();
+    Graph<int> createGraph();
+
 };
 
 #endif //DA_PROJ1_GRAPHCONSTRUCTOR_H
