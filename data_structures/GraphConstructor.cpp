@@ -65,8 +65,16 @@ Graph<int> GraphConstructor::createGraph(){
         }
     }
 
-    // TODO: Add cases that are not toy graphs (Have a separated file with the vertices)
-
+    else{
+        std::ifstream inVerticies(verticiesFile);
+        getline(inVerticies, line);
+        while(getline(inVerticies, line)){
+            int FirstVertex = parseFirstVertex(line);
+            int SecondVertex = parseSecondVertex(line);
+            res.addVertex(FirstVertex);
+            res.addVertex(SecondVertex);
+        }
+    }
 
     // Parsing the edges
     std::ifstream inEdges(edgesFile);
@@ -112,4 +120,26 @@ double GraphConstructor::parseEdge(std::string line, int& first, int& second){
     first = std::stoi(lineParsed[0]);
     second = std::stoi(lineParsed[1]);
     return  std::stod(lineParsed[2]);
+}
+
+std::unordered_map<int, std::pair<double, double>> GraphConstructor::getCoordinates(){
+    std::unordered_map<int, std::pair<double, double>> res;
+    std::ifstream inVerticies(verticiesFile);
+    std::string line;
+    getline(inVerticies, line); // for jumping header
+    while(getline(inVerticies, line)){
+        std::istringstream iss(line);
+        std::string word;
+        std::vector<std::string> lineParsed;
+        while(getline(iss, word, ',')){
+            lineParsed.push_back(word);
+        }
+        int node = std::stoi(lineParsed[0]);
+        double latitude = std::stod(lineParsed[1]);
+        double longidute = std::stod(lineParsed[2]);
+        std::pair<double, double> temp = {latitude, longidute};
+        res[node] = temp;
+    }
+
+    return res;
 }
