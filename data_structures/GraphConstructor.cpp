@@ -29,18 +29,18 @@ GraphConstructor::GraphConstructor(std::string dataset) : dataset(dataset){
     }
 
     else if (dataset == "graph1"){
-        verticiesFile = "../Datasets/Toy-Graphs/graph1/nodes.csv";
-        edgesFile = "../Datasets/Toy-Graphs/graph1/edges.csv";
+        verticiesFile = "../Datasets/Real_world_Graphs/graph1/nodes.csv";
+        edgesFile = "../Datasets/Real_world_Graphs/graph1/edges.csv";
     }
 
     else if (dataset == "graph2"){
-        verticiesFile = "../Datasets/Toy-Graphs/graph2/nodes.csv";
-        edgesFile = "../Datasets/Toy-Graphs/graph2/edges.csv";
+        verticiesFile = "../Datasets/Real_world_Graphs/graph2/nodes.csv";
+        edgesFile = "../Datasets/Real_world_Graphs/graph2/edges.csv";
     }
 
     else if (dataset == "graph3"){
-        verticiesFile = "../Datasets/Toy-Graphs/graph3/nodes.csv";
-        edgesFile = "../Datasets/Toy-Graphs/graph3/edges.csv";
+        verticiesFile = "../Datasets/Real_world_Graphs/graph3/nodes.csv";
+        edgesFile = "../Datasets/Real_world_Graphs/graph3/edges.csv";
     }
 
     // TODO: Make here the extra fully connected graphs
@@ -70,9 +70,7 @@ Graph<int> GraphConstructor::createGraph(){
         getline(inVerticies, line);
         while(getline(inVerticies, line)){
             int FirstVertex = parseFirstVertex(line);
-            int SecondVertex = parseSecondVertex(line);
             res.addVertex(FirstVertex);
-            res.addVertex(SecondVertex);
         }
     }
 
@@ -82,7 +80,7 @@ Graph<int> GraphConstructor::createGraph(){
     while(getline(inEdges, line)){
         int first, second;
         double weight = parseEdge(line, first, second);
-        res.addEdge(first, second, weight);
+        res.addBidirectionalEdge(first, second, weight);
     }
 
     return res;
