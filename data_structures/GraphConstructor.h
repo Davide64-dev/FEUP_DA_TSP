@@ -23,11 +23,10 @@ private:
 public:
     GraphConstructor(std::string dataset);
 
-    GraphConstructor();
+    GraphConstructor() = default;
 
     Graph<int> createGraph();
 
-    // TODO: add unordered_map to save the vertices' coordinates
     std::unordered_map<int, std::pair<double, double>> getCoordinates();
 
 };

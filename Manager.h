@@ -16,6 +16,8 @@ private:
 public:
     Graph<int> network;
 
+    std::unordered_map<int, std::pair<double, double>> coordinates;
+
     std::string getName();
 
     Manager(std::string name, std::string dataset);

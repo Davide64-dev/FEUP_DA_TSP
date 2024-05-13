@@ -6,8 +6,8 @@
 
 double Manager::haversine(double latitudeFirst, double longitudeFirst, double latitudeSecond, double longitudeSecond){
     // Transformation into radians
-    double rad_lat1= latitudeFirst * M_PI / 180;
-    double rad_lon1 = latitudeFirst * M_PI / 180;
+    double rad_lat1 = latitudeFirst * M_PI / 180;
+    double rad_lon1 = longitudeFirst * M_PI / 180;
     double rad_lat2 = latitudeSecond * M_PI / 180;
     double rad_lon2 = longitudeSecond * M_PI / 180;
 
@@ -26,41 +26,52 @@ double Manager::haversine(double latitudeFirst, double longitudeFirst, double la
     return earthradius * c;
 }
 
+Manager::Manager(std::string name, std::string dataset) : name(name) {
+    constructor = GraphConstructor(dataset);
+    network = constructor.createGraph();
+    coordinates = constructor.getCoordinates();
+}
 
+Graph<int> Manager::prim() {
+    Graph<int> minSpanningTree;
 
-Graph<int> Manager::prim(){
-    Graph<int> res;
+    minSpanningTree.addVertex(network.findVertex(0)->getInfo());
 
-    res.addVertex(network.findVertex(0)->getInfo());
+    while (minSpanningTree.getNumVertex() < network.getNumVertex()) {
+        int minWeight = std::numeric_limits<int>::max();
+        int minVertex = -1;
+        int minEdge = -1;
 
-    while (res.getNumVertex() < network.getNumVertex()){
-        int min = INT_MAX;
-        auto minEdge = res.getVertexSet()[0]->getAdj()[0];
-        for (auto vertex : res.getVertexSet()){
-            for (auto edge : vertex->getAdj()){
-                if (edge->getWeight() < min && res.findVertex(edge->getDest()->getInfo()) == nullptr){
-                    min = edge->getWeight();
-                    minEdge = edge;
-                }
-            }
-        }
-        for (int i = 0; i < res.getNumVertex(); i++){
-            for (int j = i + 1; j < res.getNumVertex(); j++){
-                auto vertex = res.getVertexSet()[i];
-                bool found = false;
-                for (auto adj : vertex->getAdj()){
-                    if (adj->getDest()->getInfo() == j){
-                        found = true;
-                        break;
+        for (auto vertex : minSpanningTree.getVertexSet()) {
+            for (auto edge : vertex->getAdj()) {
+                if (minSpanningTree.findVertex(edge->getDest()->getInfo()) == nullptr) {
+                    if (edge->getWeight() < minWeight) {
+                        minWeight = edge->getWeight();
+                        minVertex = vertex->getInfo();
+                        minEdge = edge->getDest()->getInfo();
                     }
                 }
-                if (!found){
-                    // TODO: Compute the haversine distance
-                }
             }
         }
-        res.addVertex(minEdge->getDest()->getInfo());
+
+        // If no direct edge is found, calculate Haversine distance
+        if (minWeight == std::numeric_limits<int>::max()) {
+            // Retrieve coordinates of the vertices
+            double lat1 = coordinates[minVertex].first;
+            double lon1 = coordinates[minVertex].second;
+            double lat2 = coordinates[minEdge].first;
+            double lon2 = coordinates[minEdge].second;
+
+            // Calculate Haversine distance
+            double distance = haversine(lat1, lon1, lat2, lon2);
+
+            // Update minWeight and minEdge
+            minWeight = distance;
+        }
+
+        minSpanningTree.addVertex(minEdge);
+        minSpanningTree.addBidirectionalEdge(minVertex, minEdge, minWeight);
     }
 
-    return res;
+    return minSpanningTree;
 }
