@@ -26,6 +26,8 @@ public:
 
     Graph<int> prim();
 
+    double triangularApproximation();
+
 
 };
 

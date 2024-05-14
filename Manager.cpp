@@ -2,6 +2,7 @@
 // Created by Davide Teixeira on 12/05/2024.
 //
 
+#include <unordered_set>
 #include "Manager.h"
 
 double Manager::haversine(double latitudeFirst, double longitudeFirst, double latitudeSecond, double longitudeSecond){
@@ -35,43 +36,55 @@ Manager::Manager(std::string name, std::string dataset) : name(name) {
 Graph<int> Manager::prim() {
     Graph<int> minSpanningTree;
 
-    minSpanningTree.addVertex(network.findVertex(0)->getInfo());
+    minSpanningTree.addVertex(0);
+
+    std::unordered_set<int> already_in;
+
+    already_in.insert(0);
 
     while (minSpanningTree.getNumVertex() < network.getNumVertex()) {
+        std::cout << "Minimum Spanning tree size " << minSpanningTree.getNumVertex() << std::endl;
+        std::cout << "Network size " << network.getNumVertex() << std::endl;
         int minWeight = std::numeric_limits<int>::max();
         int minVertex = -1;
         int minEdge = -1;
 
         for (auto vertex : minSpanningTree.getVertexSet()) {
-            for (auto edge : vertex->getAdj()) {
-                if (minSpanningTree.findVertex(edge->getDest()->getInfo()) == nullptr) {
+            auto vertexOriginalGraph = network.findVertex(vertex->getInfo());
+            for (auto edge : vertexOriginalGraph->getAdj()) {
+                if (already_in.find(edge->getDest()->getInfo()) == already_in.end()){
                     if (edge->getWeight() < minWeight) {
                         minWeight = edge->getWeight();
-                        minVertex = vertex->getInfo();
+                        minVertex = vertexOriginalGraph->getInfo();
                         minEdge = edge->getDest()->getInfo();
                     }
                 }
             }
         }
 
-        // If no direct edge is found, calculate Haversine distance
-        if (minWeight == std::numeric_limits<int>::max()) {
-            // Retrieve coordinates of the vertices
-            double lat1 = coordinates[minVertex].first;
-            double lon1 = coordinates[minVertex].second;
-            double lat2 = coordinates[minEdge].first;
-            double lon2 = coordinates[minEdge].second;
-
-            // Calculate Haversine distance
-            double distance = haversine(lat1, lon1, lat2, lon2);
-
-            // Update minWeight and minEdge
-            minWeight = distance;
-        }
+        // TODO: check better the haversine distance - graph1 is fully connected
 
         minSpanningTree.addVertex(minEdge);
+        already_in.insert(minEdge);
         minSpanningTree.addBidirectionalEdge(minVertex, minEdge, minWeight);
     }
 
     return minSpanningTree;
+}
+
+double Manager::triangularApproximation(){
+    auto mst = prim();
+
+    // double the edges to get an eulerian graph
+    for (auto v : mst.getVertexSet()){
+        for (auto e : v->getAdj()){
+            mst.addBidirectionalEdge(v->getInfo(), e->getDest()->getInfo(), e->getDest()->getDist());
+        }
+    }
+
+
+
+
+
+
 }

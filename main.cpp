@@ -4,6 +4,13 @@
 
 int main() {
     auto manager = Manager("temp", "graph1");
-    manager.prim();
+    auto x = manager.prim();
+
+    for (auto v : x.getVertexSet()){
+        for (auto e : v->getAdj()){
+            std::cout << "Just adding" << std::endl;
+            x.addBidirectionalEdge(v->getInfo(), e->getDest()->getInfo(), e->getDest()->getDist());
+        }
+    }
     return 0;
 }
