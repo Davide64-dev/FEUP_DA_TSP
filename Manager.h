@@ -26,7 +26,7 @@ public:
 
     Graph<int> prim();
 
-    double triangularApproximation();
+    double triangularApproximation(std::vector<int>& eulerian_circuit);
 
     double sumPath(const std::vector<int>& eulerian_circuit, const Graph<int>& mst);
 };

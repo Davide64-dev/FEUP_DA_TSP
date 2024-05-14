@@ -1,11 +1,14 @@
 #include <iostream>
 #include "data_structures/GraphConstructor.h"
 #include "Manager.h"
+#include "Menu.h"
 
 int main() {
-    auto manager = Manager("temp", "graph1");
-    auto sum_path = manager.triangularApproximation();
+    Manager manager = Manager("temp", "graph1");
 
-    std::cout << "Sum Path is: " << sum_path << std::endl;
+    Menu menu = Menu(manager);
+
+    menu.start();
+
     return 0;
 }

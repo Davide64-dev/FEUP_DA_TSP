@@ -43,8 +43,8 @@ Graph<int> Manager::prim() {
     already_in.insert(0);
 
     while (minSpanningTree.getNumVertex() < network.getNumVertex()) {
-        std::cout << "Minimum Spanning tree size " << minSpanningTree.getNumVertex() << std::endl;
-        std::cout << "Network size " << network.getNumVertex() << std::endl;
+        //std::cout << "Minimum Spanning tree size " << minSpanningTree.getNumVertex() << std::endl;
+        //std::cout << "Network size " << network.getNumVertex() << std::endl;
         int minWeight = std::numeric_limits<int>::max();
         int minVertex = -1;
         int minEdge = -1;
@@ -97,7 +97,7 @@ double Manager::sumPath(const std::vector<int>& eulerian_circuit, const Graph<in
     return sum;
 }
 
-double Manager::triangularApproximation(){
+double Manager::triangularApproximation(std::vector<int>& eulerian_circuit){
     auto mst = prim();
 
     // double the edges to get an eulerian graph
@@ -107,9 +107,9 @@ double Manager::triangularApproximation(){
         }
     }
 
-    auto path = mst.dfs();
+    eulerian_circuit = mst.dfs();
 
-    double sum_path = sumPath(path, mst);
+    double sum_path = sumPath(eulerian_circuit, mst);
 
     return sum_path;
 }

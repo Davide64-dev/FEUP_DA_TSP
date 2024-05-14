@@ -6,7 +6,18 @@
 #define DA_PROJ2_MENU_H
 
 
+#include "Manager.h"
+
 class Menu {
+private:
+    Manager manager;
+    void mainMenu();
+    void t42();
+    void printIntro();
+
+public:
+    Menu(Manager manager);
+    void start();
 
 };
 
