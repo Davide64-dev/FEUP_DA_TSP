@@ -4,13 +4,8 @@
 
 int main() {
     auto manager = Manager("temp", "graph1");
-    auto x = manager.prim();
+    auto sum_path = manager.triangularApproximation();
 
-    for (auto v : x.getVertexSet()){
-        for (auto e : v->getAdj()){
-            std::cout << "Just adding" << std::endl;
-            x.addBidirectionalEdge(v->getInfo(), e->getDest()->getInfo(), e->getDest()->getDist());
-        }
-    }
+    std::cout << "Sum Path is: " << sum_path << std::endl;
     return 0;
 }

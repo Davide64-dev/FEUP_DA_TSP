@@ -72,6 +72,31 @@ Graph<int> Manager::prim() {
     return minSpanningTree;
 }
 
+double Manager::sumPath(const std::vector<int>& eulerian_circuit, const Graph<int>& mst){
+    auto current = mst.findVertex(0);
+    double sum = 0.0;
+    for (int i = 1; i < eulerian_circuit.size(); i++){
+        auto next = eulerian_circuit[i];
+        for (auto edge : current->getAdj()){
+            if (edge->getDest()->getInfo() == next){
+                sum += edge->getWeight();
+            }
+        }
+        current = mst.findVertex(next);
+    }
+
+    auto lastVertex = network.findVertex(eulerian_circuit[eulerian_circuit.size() - 1]);
+
+    for (auto edge : lastVertex->getAdj()){
+        if (edge->getDest()->getInfo() == 0){
+            sum += edge->getWeight();
+            break;
+        }
+    }
+
+    return sum;
+}
+
 double Manager::triangularApproximation(){
     auto mst = prim();
 
@@ -82,9 +107,9 @@ double Manager::triangularApproximation(){
         }
     }
 
+    auto path = mst.dfs();
 
+    double sum_path = sumPath(path, mst);
 
-
-
-
+    return sum_path;
 }

@@ -28,7 +28,7 @@ public:
 
     double triangularApproximation();
 
-
+    double sumPath(const std::vector<int>& eulerian_circuit, const Graph<int>& mst);
 };
 
 
