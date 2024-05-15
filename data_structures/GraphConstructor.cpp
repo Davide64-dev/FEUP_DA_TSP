@@ -20,12 +20,12 @@ GraphConstructor::GraphConstructor(std::string dataset) : dataset(dataset){
 
     else if (dataset == "stadiums"){
         verticiesFile = "";
-        edgesFile = "../Datasets/Toy-Graphs/shipping.csv";
+        edgesFile = "../Datasets/Toy-Graphs/stadiums.csv";
     }
 
     else if (dataset == "tourism"){
         verticiesFile = "";
-        edgesFile = "../Datasets/Toy-Graphs/shipping.csv";
+        edgesFile = "../Datasets/Toy-Graphs/tourism.csv";
     }
 
     else if (dataset == "graph1"){

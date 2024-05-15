@@ -73,7 +73,7 @@ Graph<int> Manager::prim() {
 }
 
 double Manager::sumPath(const std::vector<int>& eulerian_circuit, const Graph<int>& mst){
-    auto current = mst.findVertex(0);
+    auto current = network.findVertex(0);
     double sum = 0.0;
     for (int i = 1; i < eulerian_circuit.size(); i++){
         auto next = eulerian_circuit[i];
@@ -82,7 +82,7 @@ double Manager::sumPath(const std::vector<int>& eulerian_circuit, const Graph<in
                 sum += edge->getWeight();
             }
         }
-        current = mst.findVertex(next);
+        current = network.findVertex(next);
     }
 
     auto lastVertex = network.findVertex(eulerian_circuit[eulerian_circuit.size() - 1]);
@@ -93,6 +93,38 @@ double Manager::sumPath(const std::vector<int>& eulerian_circuit, const Graph<in
             break;
         }
     }
+
+    return sum;
+}
+
+double Manager::nearestNeighbour(std::vector<int>& eulerian_circuit){
+    auto current = network.findVertex(0);
+    current->setVisited(true);
+    eulerian_circuit.push_back(0);
+    double sum = 0.0;
+
+    while (eulerian_circuit.size() < network.getNumVertex()){
+        auto min = INT_MAX;
+        auto minNext = -1;
+        for (auto e : current->getAdj()){
+            if (e->getWeight() < min && !e->getDest()->isVisited()){
+                min = e->getWeight();
+                minNext = e->getDest()->getInfo();
+            }
+        }
+        current = network.findVertex(minNext);
+        current->setVisited(true);
+        eulerian_circuit.push_back(minNext);
+        sum += min;
+    }
+
+    for (auto edge : current->getAdj()){
+        if (edge->getDest()->getInfo() == 0){
+            sum += edge->getWeight();
+            break;
+        }
+    }
+
 
     return sum;
 }

@@ -13,6 +13,7 @@ private:
     Manager manager;
     void mainMenu();
     void t42();
+    void t44();
     void printIntro();
 
 public:

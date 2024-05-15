@@ -28,7 +28,10 @@ public:
 
     double triangularApproximation(std::vector<int>& eulerian_circuit);
 
+    double nearestNeighbour(std::vector<int>& eulerian_circuit);
+
     double sumPath(const std::vector<int>& eulerian_circuit, const Graph<int>& mst);
+
 };
 
 

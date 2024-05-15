@@ -23,6 +23,8 @@ void Menu::mainMenu(){
         std::cout << "0 - Exit" << std::endl;
         std::cout << "1 - T4.1 - Backtracking Algorithm" << std::endl;
         std::cout << "2 - T4.2 - Triangular Approximation Heuristic" << std::endl;
+
+        std::cout << "4 - T4.4 - Real World Graphs" << std::endl;
         std::cout << "\nChoose an option:";
         std::cin >> option;
 
@@ -34,6 +36,10 @@ void Menu::mainMenu(){
 
             case 2:
                 t42();
+                break;
+
+            case 4:
+                t44();
                 break;
 
             default:
@@ -57,6 +63,24 @@ void Menu::t42(){
         i++;
     }
 
+    std::cout << 0 << std::endl;
+
+    std::cout << "Sum Path is: " << sum_path << std::endl;
+}
+
+void Menu::t44(){
+    // TODO: Just the nearest neighbour heuristic here
+
+    std::vector<int> path;
+    int i = 0;
+
+    double sum_path = manager.nearestNeighbour(path);
+
+    for (auto v : path){
+        std::cout << v << " -> ";
+        if (i % 20 == 19) std::cout << std::endl;
+        i++;
+    }
     std::cout << 0 << std::endl;
 
     std::cout << "Sum Path is: " << sum_path << std::endl;
