@@ -14,6 +14,7 @@ private:
     void mainMenu();
     void t42();
     void t44();
+    void t44_2();
     void printIntro();
 
 public:

@@ -145,3 +145,58 @@ double Manager::triangularApproximation(std::vector<int>& eulerian_circuit){
 
     return sum_path;
 }
+
+void Manager::twoOpt(std::vector<int>& tour) {
+    bool improved = true;
+    while (improved) {
+        improved = false;
+        for (int i = 1; i < tour.size() - 2; i++) {
+            for (int j = i + 1; j < tour.size() - 1; j++) {
+                double delta = computeDelta(tour, i, j);
+                if (delta < 0) {
+                    reverse(tour.begin() + i, tour.begin() + j + 1);
+                    improved = true;
+                }
+            }
+        }
+    }
+}
+
+double Manager::distance(int vertex1, int vertex2) {
+    // Use your haversine function or any other distance function here
+    // For example:
+
+    auto actualVertex = network.findVertex(vertex1);
+
+    for (auto edge : actualVertex->getAdj()){
+        if (edge->getDest()->getInfo() == vertex2) return edge->getWeight();
+    }
+
+    double lat1 = coordinates[vertex1].first;
+    double lon1 = coordinates[vertex1].second;
+    double lat2 = coordinates[vertex2].first;
+    double lon2 = coordinates[vertex2].second;
+    return haversine(lat1, lon1, lat2, lon2);
+}
+
+double Manager::computeDelta(const std::vector<int>& tour, int i, int j) {
+    double delta = 0.0;
+
+    delta += distance(tour[i - 1], tour[j]) + distance(tour[i], tour[j + 1]);
+    delta -= distance(tour[i - 1], tour[i]) + distance(tour[j], tour[j + 1]);
+
+    return delta;
+}
+
+double Manager::twoOptTSP(std::vector<int>& eulerian_circuit) {
+    // Get an initial solution, e.g., using nearest neighbor heuristic
+    double initial_distance = nearestNeighbour(eulerian_circuit);
+
+    // Improve the initial solution using 2-opt heuristic
+    twoOpt(eulerian_circuit);
+
+    // Calculate the total distance after improvement
+    double total_distance = sumPath(eulerian_circuit, network);
+
+    return total_distance;
+}

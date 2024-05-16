@@ -32,6 +32,14 @@ public:
 
     double sumPath(const std::vector<int>& eulerian_circuit, const Graph<int>& mst);
 
+    void twoOpt(std::vector<int>& tour);
+
+    double distance(int vertex1, int vertex2);
+
+    double computeDelta(const std::vector<int>& tour, int i, int j);
+
+    double twoOptTSP(std::vector<int>& eulerian_circuit);
+
 };
 
 

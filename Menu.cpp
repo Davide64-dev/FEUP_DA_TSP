@@ -24,7 +24,8 @@ void Menu::mainMenu(){
         std::cout << "1 - T4.1 - Backtracking Algorithm" << std::endl;
         std::cout << "2 - T4.2 - Triangular Approximation Heuristic" << std::endl;
 
-        std::cout << "4 - T4.4 - Real World Graphs" << std::endl;
+        std::cout << "4 - T4.4 - Real World Graphs - Nearest Neighbour" << std::endl;
+        std::cout << "5 - T4.4 - Real World Graphs - Nearest Neighbour + 2opt" << std::endl;
         std::cout << "\nChoose an option:";
         std::cin >> option;
 
@@ -40,6 +41,10 @@ void Menu::mainMenu(){
 
             case 4:
                 t44();
+                break;
+
+            case 5:
+                t44_2();
                 break;
 
             default:
@@ -75,6 +80,22 @@ void Menu::t44(){
     int i = 0;
 
     double sum_path = manager.nearestNeighbour(path);
+
+    for (auto v : path){
+        std::cout << v << " -> ";
+        if (i % 20 == 19) std::cout << std::endl;
+        i++;
+    }
+    std::cout << 0 << std::endl;
+
+    std::cout << "Sum Path is: " << sum_path << std::endl;
+}
+
+void Menu::t44_2(){
+    std::vector<int> path;
+    int i = 0;
+
+    double sum_path = manager.twoOptTSP(path);
 
     for (auto v : path){
         std::cout << v << " -> ";
