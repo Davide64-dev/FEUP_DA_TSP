@@ -74,8 +74,6 @@ void Menu::t42(){
 }
 
 void Menu::t44(){
-    // TODO: Just the nearest neighbour heuristic here
-
     std::vector<int> path;
     int i = 0;
 

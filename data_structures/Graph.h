@@ -44,6 +44,8 @@ public:
     void removeOutgoingEdges();
     void setMaxIncoming(double newMaxIncoming);
 
+    Edge<T>* getSpecificAdj(T in);
+
     double getMaxIncoming();
     void enable ();
     void disable ();
@@ -52,7 +54,7 @@ public:
     friend class MutablePriorityQueue<Vertex>;
 protected:
     T info;                // info node
-    std::vector<Edge<T> *> adj;  // outgoing edges
+    std::unordered_map<T, Edge<T> *> adj;  // outgoing edges
 
     // auxiliary fields
     bool visited = false; // used by DFS, BFS, Prim ...
@@ -172,7 +174,7 @@ Vertex<T>::Vertex(T in): info(in) {}
 template <class T>
 Edge<T> * Vertex<T>::addEdge(Vertex<T> *d, double w) {
     auto newEdge = new Edge<T>(this, d, w);
-    adj.push_back(newEdge);
+    adj[d->getInfo()] = newEdge;
     d->incoming.push_back(newEdge);
     return newEdge;
 }
@@ -190,6 +192,11 @@ void Vertex<T>::disable (){
 template <class T>
 bool Vertex<T>::isActiveted(){
     return isActive;
+}
+
+template <class T>
+Edge<T>* Vertex<T>::getSpecificAdj(T in){
+    return adj.find(in)->second;
 }
 
 /*
@@ -251,9 +258,12 @@ T Vertex<T>::getInfo() const {
 
 template <class T>
 std::vector<Edge<T>*> Vertex<T>::getAdj() const {
-    return this->adj;
+    std::vector<Edge<T>*> result;
+    for (const auto& pair : adj) {
+        result.push_back(pair.second);
+    }
+    return result;
 }
-
 template <class T>
 bool Vertex<T>::isVisited() const {
     return this->visited;

@@ -40,34 +40,50 @@ Manager::Manager(std::string name, std::string dataset) : name(name) {
 Graph<int> Manager::prim() {
     Graph<int> minSpanningTree;
 
+    // Priority queue to store edges based on weight
+    std::priority_queue<std::pair<int, std::pair<int, int>>, std::vector<std::pair<int, std::pair<int, int>>>, std::greater<>> pq;
+
+    // Start with any vertex (here, 0)
     minSpanningTree.addVertex(0);
 
-    std::unordered_set<int> already_in;
+    std::unordered_set<int> visited;
+    visited.insert(0);
 
-    already_in.insert(0);
+    // Add all adjacent edges of the starting vertex to the priority queue
+    auto startVertex = network.findVertex(0);
+    for (auto edge : startVertex->getAdj()) {
+        pq.push({edge->getWeight(), {0, edge->getDest()->getInfo()}});
+    }
 
     while (minSpanningTree.getNumVertex() < network.getNumVertex()) {
-        int minWeight = std::numeric_limits<int>::max();
-        int minVertex = -1;
-        int minEdge = -1;
+        // Get the minimum weight edge from the priority queue
+        auto minEdge = pq.top();
+        pq.pop();
 
-        for (auto vertex : minSpanningTree.getVertexSet()) {
-            auto vertexOriginalGraph = network.findVertex(vertex->getInfo());
-            for (auto edge : vertexOriginalGraph->getAdj()) {
-                if (already_in.find(edge->getDest()->getInfo()) == already_in.end()){
-                    auto dist = distance(edge->getDest()->getInfo(), vertex->getInfo());
-                    if (dist < minWeight){
-                        minWeight = dist;
-                        minVertex = vertexOriginalGraph->getInfo();
-                        minEdge = edge->getDest()->getInfo();
-                    }
-                }
-            }
+        int weight = minEdge.first;
+        int srcVertex = minEdge.second.first;
+        int destVertex = minEdge.second.second;
+
+        // If the destination vertex is already visited, skip
+        if (visited.find(destVertex) != visited.end()) {
+            continue;
         }
 
-        minSpanningTree.addVertex(minEdge);
-        already_in.insert(minEdge);
-        minSpanningTree.addBidirectionalEdge(minVertex, minEdge, minWeight);
+        // Add the destination vertex to the minimum spanning tree
+        minSpanningTree.addVertex(destVertex);
+        minSpanningTree.addBidirectionalEdge(srcVertex, destVertex, weight);
+
+        // Mark destination vertex as visited
+        visited.insert(destVertex);
+
+        // Add all adjacent edges of the destination vertex to the priority queue
+        auto vertex = network.findVertex(destVertex);
+        for (auto edge : vertex->getAdj()) {
+            int nextVertex = edge->getDest()->getInfo();
+            if (visited.find(nextVertex) == visited.end()) {
+                pq.push({edge->getWeight(), {destVertex, nextVertex}});
+            }
+        }
     }
 
     return minSpanningTree;
@@ -141,6 +157,8 @@ double Manager::triangularApproximation(int initial, std::vector<int>& eulerian_
 }
 
 void Manager::twoOpt(std::vector<int>& tour) {
+    std::cout << "two opt called\n";
+    int max = 100;
     bool improved = true;
     while (improved) {
         improved = false;
@@ -160,9 +178,9 @@ double Manager::distance(int vertex1, int vertex2, bool isFullyConnected) {
 
     auto actualVertex = network.findVertex(vertex1);
 
-    for (auto edge : actualVertex->getAdj()){
-        if (edge->getDest()->getInfo() == vertex2) return edge->getWeight();
-    }
+    auto edge = actualVertex->getSpecificAdj(vertex2);
+
+    if (edge != nullptr) return edge->getWeight();
 
     if (isFullyConnected) {
         double lat1 = coordinates[vertex1].first;
