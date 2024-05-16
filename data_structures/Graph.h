@@ -146,7 +146,7 @@ public:
     bool dfsIsDAG(Vertex<T> *v) const;
     std::vector<T> topsort() const;
 protected:
-    std::vector<Vertex<T> *> vertexSet;    // vertex set
+    std::unordered_map<T, Vertex<T>*> vertexSet;    // vertex set
 
     double ** distMatrix = nullptr;   // dist matrix for Floyd-Warshall
     int **pathMatrix = nullptr;   // path matrix for Floyd-Warshall
@@ -409,17 +409,22 @@ int Graph<T>::getNumVertex() const {
 
 template <class T>
 std::vector<Vertex<T> *> Graph<T>::getVertexSet() const {
-    return vertexSet;
+    std::vector<Vertex<T> *> result;
+    for (auto& pair : vertexSet) {
+        result.push_back(pair.second);
+    }
+    return result;
 }
+
 
 /*
  * Auxiliary function to find a vertex with a given content.
  */
 template <class T>
 Vertex<T> * Graph<T>::findVertex(const T &in) const {
-    for (auto v : vertexSet)
-        if (static_cast<const T>(v->getInfo()) == in)
-            return v;
+    auto it = vertexSet.find(in);
+    if (it != vertexSet.end())
+        return it->second;
     return nullptr;
 }
 
@@ -441,7 +446,7 @@ template <class T>
 bool Graph<T>::addVertex(const T &in) {
     if (findVertex(in) != nullptr)
         return false;
-    vertexSet.push_back(new Vertex<T>(in));
+    vertexSet[in] = new Vertex<T>(in);  // Insert into the unordered_map
     return true;
 }
 
@@ -452,17 +457,16 @@ bool Graph<T>::addVertex(const T &in) {
  */
 template <class T>
 bool Graph<T>::removeVertex(const T &in) {
-    for (auto it = vertexSet.begin(); it != vertexSet.end(); it++) {
-        if ((*it)->getInfo() == in) {
-            auto v = *it;
-            v->removeOutgoingEdges();
-            for (auto u : vertexSet) {
-                u->removeEdge(v->getInfo());
-            }
-            vertexSet.erase(it);
-            delete v;
-            return true;
+    auto it = vertexSet.find(in);
+    if (it != vertexSet.end()) {
+        auto v = it->second;
+        v->removeOutgoingEdges();
+        for (auto& pair : vertexSet) {
+            pair.second->removeEdge(in);
         }
+        delete v;
+        vertexSet.erase(it);
+        return true;
     }
     return false;
 }
@@ -518,9 +522,9 @@ bool Graph<T>::addBidirectionalEdge(const T &sourc, const T &dest, double w) {
 template <class T>
 std::vector<T> Graph<T>::dfs() const {
     std::vector<T> res;
-    for (auto v : vertexSet)
+    for (auto v : getVertexSet())
         v->setVisited(false);
-    for (auto v : vertexSet)
+    for (auto v : getVertexSet())
         if (!v->isVisited())
             dfsVisit(v, res);
     return res;
