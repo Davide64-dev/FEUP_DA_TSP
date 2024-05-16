@@ -12,33 +12,29 @@ class Manager {
 private:
     std::string name;
     GraphConstructor constructor;
+    Graph<int> network;
+    std::unordered_map<int, std::pair<double, double>> coordinates;
+    double haversine(double latitudeFirst, double longitudeFirst, double latitudeSecond, double longitudeSecond);
+    double distance(int vertex1, int vertex2);
+    double computeDelta(const std::vector<int>& tour, int i, int j);
 
 public:
-    Graph<int> network;
 
-    std::unordered_map<int, std::pair<double, double>> coordinates;
-
-    std::string getName();
+    std::string getName() const;
 
     Manager(std::string name, std::string dataset);
 
-    double haversine(double latitudeFirst, double longitudeFirst, double latitudeSecond, double longitudeSecond);
-
     Graph<int> prim();
 
-    double triangularApproximation(std::vector<int>& eulerian_circuit);
+    double triangularApproximation(int initial, std::vector<int>& eulerian_circuit);
 
-    double nearestNeighbour(std::vector<int>& eulerian_circuit);
+    double nearestNeighbour(int initial, std::vector<int>& eulerian_circuit);
 
-    double sumPath(const std::vector<int>& eulerian_circuit, const Graph<int>& mst);
+    double sumPath(int initial, const std::vector<int>& eulerian_circuit);
 
     void twoOpt(std::vector<int>& tour);
 
-    double distance(int vertex1, int vertex2);
-
-    double computeDelta(const std::vector<int>& tour, int i, int j);
-
-    double twoOptTSP(std::vector<int>& eulerian_circuit);
+    double twoOptTSP(int initial, std::vector<int>& eulerian_circuit);
 
 };
 

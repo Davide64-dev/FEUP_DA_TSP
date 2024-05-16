@@ -5,6 +5,10 @@
 #include <unordered_set>
 #include "Manager.h"
 
+std::string Manager::getName() const{
+    return name;
+}
+
 double Manager::haversine(double latitudeFirst, double longitudeFirst, double latitudeSecond, double longitudeSecond){
     // Transformation into radians
     double rad_lat1 = latitudeFirst * M_PI / 180;
@@ -62,8 +66,6 @@ Graph<int> Manager::prim() {
             }
         }
 
-        // TODO: check better the haversine distance - graph1 is fully connected
-
         minSpanningTree.addVertex(minEdge);
         already_in.insert(minEdge);
         minSpanningTree.addBidirectionalEdge(minVertex, minEdge, minWeight);
@@ -72,8 +74,8 @@ Graph<int> Manager::prim() {
     return minSpanningTree;
 }
 
-double Manager::sumPath(const std::vector<int>& eulerian_circuit, const Graph<int>& mst){
-    auto current = network.findVertex(0);
+double Manager::sumPath(int initial, const std::vector<int>& eulerian_circuit){
+    auto current = network.findVertex(initial);
     double sum = 0.0;
     for (int i = 1; i < eulerian_circuit.size(); i++){
         auto next = eulerian_circuit[i];
@@ -88,7 +90,7 @@ double Manager::sumPath(const std::vector<int>& eulerian_circuit, const Graph<in
     auto lastVertex = network.findVertex(eulerian_circuit[eulerian_circuit.size() - 1]);
 
     for (auto edge : lastVertex->getAdj()){
-        if (edge->getDest()->getInfo() == 0){
+        if (edge->getDest()->getInfo() == initial){
             sum += edge->getWeight();
             break;
         }
@@ -97,10 +99,10 @@ double Manager::sumPath(const std::vector<int>& eulerian_circuit, const Graph<in
     return sum;
 }
 
-double Manager::nearestNeighbour(std::vector<int>& eulerian_circuit){
-    auto current = network.findVertex(0);
+double Manager::nearestNeighbour(int initial, std::vector<int>& eulerian_circuit){
+    auto current = network.findVertex(initial);
     current->setVisited(true);
-    eulerian_circuit.push_back(0);
+    eulerian_circuit.push_back(initial);
     double sum = 0.0;
 
     while (eulerian_circuit.size() < network.getNumVertex()){
@@ -119,7 +121,7 @@ double Manager::nearestNeighbour(std::vector<int>& eulerian_circuit){
     }
 
     for (auto edge : current->getAdj()){
-        if (edge->getDest()->getInfo() == 0){
+        if (edge->getDest()->getInfo() == initial){
             sum += edge->getWeight();
             break;
         }
@@ -129,7 +131,7 @@ double Manager::nearestNeighbour(std::vector<int>& eulerian_circuit){
     return sum;
 }
 
-double Manager::triangularApproximation(std::vector<int>& eulerian_circuit){
+double Manager::triangularApproximation(int initial, std::vector<int>& eulerian_circuit){
     auto mst = prim();
 
     // double the edges to get an eulerian graph
@@ -139,9 +141,9 @@ double Manager::triangularApproximation(std::vector<int>& eulerian_circuit){
         }
     }
 
-    eulerian_circuit = mst.dfs();
+    eulerian_circuit = mst.dfs(initial);
 
-    double sum_path = sumPath(eulerian_circuit, mst);
+    double sum_path = sumPath(initial, eulerian_circuit);
 
     return sum_path;
 }
@@ -188,15 +190,16 @@ double Manager::computeDelta(const std::vector<int>& tour, int i, int j) {
     return delta;
 }
 
-double Manager::twoOptTSP(std::vector<int>& eulerian_circuit) {
+double Manager::twoOptTSP(int initial, std::vector<int>& eulerian_circuit) {
+
     // Get an initial solution, e.g., using nearest neighbor heuristic
-    double initial_distance = nearestNeighbour(eulerian_circuit);
+    nearestNeighbour(initial, eulerian_circuit);
 
     // Improve the initial solution using 2-opt heuristic
     twoOpt(eulerian_circuit);
 
     // Calculate the total distance after improvement
-    double total_distance = sumPath(eulerian_circuit, network);
+    double total_distance = sumPath(0, eulerian_circuit);
 
     return total_distance;
 }

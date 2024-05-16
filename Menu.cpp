@@ -60,7 +60,7 @@ void Menu::t42(){
 
     std::vector<int> path;
 
-    double sum_path = manager.triangularApproximation(path);
+    double sum_path = manager.triangularApproximation(0, path);
 
     for (auto v : path){
         std::cout << v << " -> ";
@@ -79,7 +79,7 @@ void Menu::t44(){
     std::vector<int> path;
     int i = 0;
 
-    double sum_path = manager.nearestNeighbour(path);
+    double sum_path = manager.nearestNeighbour(0, path);
 
     for (auto v : path){
         std::cout << v << " -> ";
@@ -95,7 +95,7 @@ void Menu::t44_2(){
     std::vector<int> path;
     int i = 0;
 
-    double sum_path = manager.twoOptTSP(path);
+    double sum_path = manager.twoOptTSP(0, path);
 
     for (auto v : path){
         std::cout << v << " -> ";

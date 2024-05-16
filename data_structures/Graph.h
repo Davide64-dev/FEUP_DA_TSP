@@ -544,7 +544,7 @@ std::vector<T> Graph<T>::dfs(const T & source) const {
     }
     // Set that no vertex has been visited yet
     for (auto v : vertexSet) {
-        v->setVisited(false);
+        v.second->setVisited(false);
     }
     // Perform the actual DFS using recursion
     dfsVisit(s, res);
