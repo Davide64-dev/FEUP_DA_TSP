@@ -47,8 +47,6 @@ Graph<int> Manager::prim() {
     already_in.insert(0);
 
     while (minSpanningTree.getNumVertex() < network.getNumVertex()) {
-        //std::cout << "Minimum Spanning tree size " << minSpanningTree.getNumVertex() << std::endl;
-        //std::cout << "Network size " << network.getNumVertex() << std::endl;
         int minWeight = std::numeric_limits<int>::max();
         int minVertex = -1;
         int minEdge = -1;
@@ -57,8 +55,9 @@ Graph<int> Manager::prim() {
             auto vertexOriginalGraph = network.findVertex(vertex->getInfo());
             for (auto edge : vertexOriginalGraph->getAdj()) {
                 if (already_in.find(edge->getDest()->getInfo()) == already_in.end()){
-                    if (edge->getWeight() < minWeight) {
-                        minWeight = edge->getWeight();
+                    auto dist = distance(edge->getDest()->getInfo(), vertex->getInfo());
+                    if (dist < minWeight){
+                        minWeight = dist;
                         minVertex = vertexOriginalGraph->getInfo();
                         minEdge = edge->getDest()->getInfo();
                     }
@@ -81,7 +80,7 @@ double Manager::sumPath(int initial, const std::vector<int>& eulerian_circuit){
         auto next = eulerian_circuit[i];
         for (auto edge : current->getAdj()){
             if (edge->getDest()->getInfo() == next){
-                sum += edge->getWeight();
+                sum += distance(next, current->getInfo());
             }
         }
         current = network.findVertex(next);
@@ -89,12 +88,7 @@ double Manager::sumPath(int initial, const std::vector<int>& eulerian_circuit){
 
     auto lastVertex = network.findVertex(eulerian_circuit[eulerian_circuit.size() - 1]);
 
-    for (auto edge : lastVertex->getAdj()){
-        if (edge->getDest()->getInfo() == initial){
-            sum += edge->getWeight();
-            break;
-        }
-    }
+    sum += distance(lastVertex->getInfo(), initial);
 
     return sum;
 }
@@ -109,9 +103,12 @@ double Manager::nearestNeighbour(int initial, std::vector<int>& eulerian_circuit
         auto min = INT_MAX;
         auto minNext = -1;
         for (auto e : current->getAdj()){
-            if (e->getWeight() < min && !e->getDest()->isVisited()){
-                min = e->getWeight();
-                minNext = e->getDest()->getInfo();
+            if (!e->getDest()->isVisited()) {
+                auto dist = distance(e->getDest()->getInfo(), current->getInfo());
+                if (dist < min) {
+                    min = dist;
+                    minNext = e->getDest()->getInfo();
+                }
             }
         }
         current = network.findVertex(minNext);
@@ -120,12 +117,7 @@ double Manager::nearestNeighbour(int initial, std::vector<int>& eulerian_circuit
         sum += min;
     }
 
-    for (auto edge : current->getAdj()){
-        if (edge->getDest()->getInfo() == initial){
-            sum += edge->getWeight();
-            break;
-        }
-    }
+    sum += distance(initial, current->getInfo());
 
 
     return sum;
@@ -164,9 +156,7 @@ void Manager::twoOpt(std::vector<int>& tour) {
     }
 }
 
-double Manager::distance(int vertex1, int vertex2) {
-    // Use your haversine function or any other distance function here
-    // For example:
+double Manager::distance(int vertex1, int vertex2, bool isFullyConnected) {
 
     auto actualVertex = network.findVertex(vertex1);
 
@@ -174,11 +164,15 @@ double Manager::distance(int vertex1, int vertex2) {
         if (edge->getDest()->getInfo() == vertex2) return edge->getWeight();
     }
 
-    double lat1 = coordinates[vertex1].first;
-    double lon1 = coordinates[vertex1].second;
-    double lat2 = coordinates[vertex2].first;
-    double lon2 = coordinates[vertex2].second;
-    return haversine(lat1, lon1, lat2, lon2);
+    if (isFullyConnected) {
+        double lat1 = coordinates[vertex1].first;
+        double lon1 = coordinates[vertex1].second;
+        double lat2 = coordinates[vertex2].first;
+        double lon2 = coordinates[vertex2].second;
+        return haversine(lat1, lon1, lat2, lon2);
+    }
+
+    return INT_MAX;
 }
 
 double Manager::computeDelta(const std::vector<int>& tour, int i, int j) {
@@ -199,7 +193,7 @@ double Manager::twoOptTSP(int initial, std::vector<int>& eulerian_circuit) {
     twoOpt(eulerian_circuit);
 
     // Calculate the total distance after improvement
-    double total_distance = sumPath(0, eulerian_circuit);
+    double total_distance = sumPath(initial, eulerian_circuit);
 
     return total_distance;
 }

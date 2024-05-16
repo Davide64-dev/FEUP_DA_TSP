@@ -17,6 +17,7 @@ private:
 
     int parseFirstVertex(std::string line);
     int parseSecondVertex(std::string line);
+    int n_verticies = 0;
 
     double parseEdge(std::string line, int& first, int& second);
 

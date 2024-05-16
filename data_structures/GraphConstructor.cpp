@@ -43,7 +43,12 @@ GraphConstructor::GraphConstructor(std::string dataset) : dataset(dataset){
         edgesFile = "../Datasets/Real_world_Graphs/graph3/edges.csv";
     }
 
-    // TODO: Make here the extra fully connected graphs
+    else {
+        verticiesFile = "../Datasets/Extra_Fully_Connected_Graphs/nodes.csv";
+        edgesFile = "../Datasets/Extra_Fully_Connected_Graphs/edges_" + dataset + ".csv";
+        n_verticies = std::stoi(dataset);
+    }
+
 }
 
 Graph<int> GraphConstructor::createGraph(){
@@ -51,8 +56,6 @@ Graph<int> GraphConstructor::createGraph(){
     Graph<int> res = Graph<int>();
     std::string line;
     if (verticiesFile == ""){
-
-
         std::ifstream inVerticies(edgesFile);
         getline(inVerticies, line); // for jumping header
         while(getline(inVerticies, line)){
@@ -63,6 +66,17 @@ Graph<int> GraphConstructor::createGraph(){
             if (res.findVertex(SecondVertex) == nullptr)
                 res.addVertex(SecondVertex);
         }
+    }
+
+    else if (verticiesFile == "../Datasets/Extra_Fully_Connected_Graphs/nodes.csv"){
+        std::ifstream inVerticies(verticiesFile);
+        getline(inVerticies, line);
+        for (int i = 0; i < n_verticies; i++){
+            getline(inVerticies, line);
+            int vertex = parseFirstVertex(line);
+            res.addVertex(vertex);
+        }
+
     }
 
     else{

@@ -15,7 +15,7 @@ private:
     Graph<int> network;
     std::unordered_map<int, std::pair<double, double>> coordinates;
     double haversine(double latitudeFirst, double longitudeFirst, double latitudeSecond, double longitudeSecond);
-    double distance(int vertex1, int vertex2);
+    double distance(int vertex1, int vertex2, bool isFullyConnected = true);
     double computeDelta(const std::vector<int>& tour, int i, int j);
 
 public:
