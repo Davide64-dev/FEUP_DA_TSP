@@ -22,6 +22,8 @@ public:
 
     std::string getName() const;
 
+    void replaceGraphToNew();
+
     int getGraphSize() const;
 
     Manager(std::string name, std::string dataset);

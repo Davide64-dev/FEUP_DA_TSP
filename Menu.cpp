@@ -71,6 +71,7 @@ void Menu::mainMenu(){
 
 void Menu::t22(){
     Manager tempManager = manager;
+    tempManager.replaceGraphToNew();
     std::vector<int> path;
     double sum_path = tempManager.triangularApproximation(0, path);
     printPath(path);
@@ -79,6 +80,7 @@ void Menu::t22(){
 
 void Menu::t23_1(){
     Manager tempManager = manager;
+    tempManager.replaceGraphToNew();
     std::vector<int> path;
     double sum_path = tempManager.nearestNeighbour(0, path, true);
     printPath(path);
@@ -87,6 +89,7 @@ void Menu::t23_1(){
 
 void Menu::t23_2(){
     Manager tempManager = manager;
+    tempManager.replaceGraphToNew();
     std::vector<int> path;
     double sum_path = tempManager.twoOptTSP(0, path, true);
     printPath(path);
@@ -95,6 +98,7 @@ void Menu::t23_2(){
 
 void Menu::t24_1(){
     Manager tempManager = manager;
+    tempManager.replaceGraphToNew();
     std::vector<int> path;
     int ini = getInitialVertex();
     double sum_path = tempManager.nearestNeighbour(ini, path, false);
@@ -104,6 +108,7 @@ void Menu::t24_1(){
 
 void Menu::t24_2(){
     Manager tempManager = manager;
+    tempManager.replaceGraphToNew();
     std::vector<int> path;
     int ini = getInitialVertex();
     double sum_path = tempManager.twoOptTSP(ini, path, false);
