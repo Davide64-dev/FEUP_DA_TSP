@@ -89,14 +89,14 @@ Graph<int> Manager::prim() {
     return minSpanningTree;
 }
 
-double Manager::sumPath(int initial, const std::vector<int>& eulerian_circuit){
+double Manager::sumPath(int initial, const std::vector<int>& eulerian_circuit, bool isFullyConnected){
     auto current = network.findVertex(initial);
     double sum = 0.0;
     for (int i = 1; i < eulerian_circuit.size(); i++){
         auto next = eulerian_circuit[i];
         for (auto edge : current->getAdj()){
             if (edge->getDest()->getInfo() == next){
-                sum += distance(next, current->getInfo());
+                sum += distance(next, current->getInfo(), isFullyConnected);
             }
         }
         current = network.findVertex(next);
@@ -104,12 +104,12 @@ double Manager::sumPath(int initial, const std::vector<int>& eulerian_circuit){
 
     auto lastVertex = network.findVertex(eulerian_circuit[eulerian_circuit.size() - 1]);
 
-    sum += distance(lastVertex->getInfo(), initial);
+    sum += distance(lastVertex->getInfo(), initial, isFullyConnected);
 
     return sum;
 }
 
-double Manager::nearestNeighbour(int initial, std::vector<int>& eulerian_circuit){
+double Manager::nearestNeighbour(int initial, std::vector<int>& eulerian_circuit, bool isFullyConnected){
     auto current = network.findVertex(initial);
     current->setVisited(true);
     eulerian_circuit.push_back(initial);
@@ -120,7 +120,7 @@ double Manager::nearestNeighbour(int initial, std::vector<int>& eulerian_circuit
         auto minNext = -1;
         for (auto e : current->getAdj()){
             if (!e->getDest()->isVisited()) {
-                auto dist = distance(e->getDest()->getInfo(), current->getInfo());
+                auto dist = distance(e->getDest()->getInfo(), current->getInfo(), isFullyConnected);
                 if (dist < min) {
                     min = dist;
                     minNext = e->getDest()->getInfo();
@@ -133,7 +133,7 @@ double Manager::nearestNeighbour(int initial, std::vector<int>& eulerian_circuit
         sum += min;
     }
 
-    sum += distance(initial, current->getInfo());
+    sum += distance(initial, current->getInfo(), isFullyConnected);
 
 
     return sum;
@@ -156,21 +156,23 @@ double Manager::triangularApproximation(int initial, std::vector<int>& eulerian_
     return sum_path;
 }
 
-void Manager::twoOpt(std::vector<int>& tour) {
+void Manager::twoOpt(std::vector<int>& tour, bool isFullyConnected) {
     std::cout << "two opt called\n";
     int max = 100;
+    int count = 0;
     bool improved = true;
-    while (improved) {
+    while (improved && count < max) {
         improved = false;
         for (int i = 1; i < tour.size() - 2; i++) {
             for (int j = i + 1; j < tour.size() - 1; j++) {
-                double delta = computeDelta(tour, i, j);
+                double delta = computeDelta(tour, i, j, isFullyConnected);
                 if (delta < 0) {
                     reverse(tour.begin() + i, tour.begin() + j + 1);
                     improved = true;
                 }
             }
         }
+        count++;
     }
 }
 
@@ -193,25 +195,25 @@ double Manager::distance(int vertex1, int vertex2, bool isFullyConnected) {
     return INT_MAX;
 }
 
-double Manager::computeDelta(const std::vector<int>& tour, int i, int j) {
+double Manager::computeDelta(const std::vector<int>& tour, int i, int j, bool isFullyConnected) {
     double delta = 0.0;
 
-    delta += distance(tour[i - 1], tour[j]) + distance(tour[i], tour[j + 1]);
-    delta -= distance(tour[i - 1], tour[i]) + distance(tour[j], tour[j + 1]);
+    delta += distance(tour[i - 1], tour[j]) + distance(tour[i], tour[j + 1], isFullyConnected);
+    delta -= distance(tour[i - 1], tour[i]) + distance(tour[j], tour[j + 1], isFullyConnected);
 
     return delta;
 }
 
-double Manager::twoOptTSP(int initial, std::vector<int>& eulerian_circuit) {
+double Manager::twoOptTSP(int initial, std::vector<int>& eulerian_circuit, bool isFullyConnected) {
 
     // Get an initial solution, e.g., using nearest neighbor heuristic
-    nearestNeighbour(initial, eulerian_circuit);
+    nearestNeighbour(initial, eulerian_circuit, isFullyConnected);
 
     // Improve the initial solution using 2-opt heuristic
-    twoOpt(eulerian_circuit);
+    twoOpt(eulerian_circuit, isFullyConnected);
 
     // Calculate the total distance after improvement
-    double total_distance = sumPath(initial, eulerian_circuit);
+    double total_distance = sumPath(initial, eulerian_circuit, isFullyConnected);
 
     return total_distance;
 }

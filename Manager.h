@@ -16,7 +16,7 @@ private:
     std::unordered_map<int, std::pair<double, double>> coordinates;
     double haversine(double latitudeFirst, double longitudeFirst, double latitudeSecond, double longitudeSecond);
     double distance(int vertex1, int vertex2, bool isFullyConnected = true);
-    double computeDelta(const std::vector<int>& tour, int i, int j);
+    double computeDelta(const std::vector<int>& tour, int i, int j, bool isFullyConnected = true);
 
 public:
 
@@ -28,13 +28,13 @@ public:
 
     double triangularApproximation(int initial, std::vector<int>& eulerian_circuit);
 
-    double nearestNeighbour(int initial, std::vector<int>& eulerian_circuit);
+    double nearestNeighbour(int initial, std::vector<int>& eulerian_circuit, bool isFullyConnected = true);
 
-    double sumPath(int initial, const std::vector<int>& eulerian_circuit);
+    double sumPath(int initial, const std::vector<int>& eulerian_circuit, bool isFullyConnected = true);
 
-    void twoOpt(std::vector<int>& tour);
+    void twoOpt(std::vector<int>& tour, bool isFullyConnected = true);
 
-    double twoOptTSP(int initial, std::vector<int>& eulerian_circuit);
+    double twoOptTSP(int initial, std::vector<int>& eulerian_circuit, bool isFullyConnected = true);
 
 };
 

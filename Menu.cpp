@@ -23,9 +23,11 @@ void Menu::mainMenu(){
         std::cout << "0 - Exit" << std::endl;
         std::cout << "1 - T2.1 - Backtracking Algorithm" << std::endl;
         std::cout << "2 - T2.2 - Triangular Approximation Heuristic" << std::endl;
+        std::cout << "3 - T2.3 - Nearest Neighbour" << std::endl;
+        std::cout << "4 - T2.3 - Nearest Neighbour + 2opt" << std::endl;
 
-        std::cout << "4 - T2.4 - Real World Graphs - Nearest Neighbour" << std::endl;
-        std::cout << "5 - T2.4 - Real World Graphs - Nearest Neighbour + 2opt" << std::endl;
+        std::cout << "5 - T2.4 - Real World Graphs - Nearest Neighbour" << std::endl;
+        std::cout << "6 - T2.4 - Real World Graphs - Nearest Neighbour + 2opt" << std::endl;
         std::cout << "\nChoose an option:";
         std::cin >> option;
 
@@ -39,11 +41,18 @@ void Menu::mainMenu(){
                 t22();
                 break;
 
+            case 3:
+                t23_1();
+                break;
             case 4:
-                t24();
+                t23_2();
                 break;
 
             case 5:
+                t24_1();
+                break;
+
+            case 6:
                 t24_2();
                 break;
 
@@ -56,53 +65,57 @@ void Menu::mainMenu(){
 }
 
 void Menu::t22(){
-    int i = 0;
-
     std::vector<int> path;
-
     double sum_path = manager.triangularApproximation(0, path);
-
-    for (auto v : path){
-        std::cout << v << " -> ";
-        if (i % 20 == 19) std::cout << std::endl;
-        i++;
-    }
-
-    std::cout << 0 << std::endl;
-
+    printPath(path);
     std::cout << "Sum Path is: " << sum_path << std::endl;
 }
 
-void Menu::t24(){
+void Menu::t23_1(){
     std::vector<int> path;
-    int i = 0;
+    double sum_path = manager.nearestNeighbour(0, path, true);
+    printPath(path);
+    std::cout << "Sum Path is: " << sum_path << std::endl;
+};
 
-    double sum_path = manager.nearestNeighbour(0, path);
+void Menu::t23_2(){
+    std::vector<int> path;
+    double sum_path = manager.nearestNeighbour(0, path, true);
+    printPath(path);
+    std::cout << "Sum Path is: " << sum_path << std::endl;
+}
 
-    for (auto v : path){
-        std::cout << v << " -> ";
-        if (i % 20 == 19) std::cout << std::endl;
-        i++;
-    }
-    std::cout << 0 << std::endl;
-
+void Menu::t24_1(){
+    std::vector<int> path;
+    int ini = getInitialVertex();
+    double sum_path = manager.nearestNeighbour(ini, path, false);
+    printPath(path);
     std::cout << "Sum Path is: " << sum_path << std::endl;
 }
 
 void Menu::t24_2(){
     std::vector<int> path;
+    int ini = getInitialVertex();
+    double sum_path = manager.twoOptTSP(ini, path, false);
+    printPath(path);
+    std::cout << "Sum Path is: " << sum_path << std::endl;
+}
+
+void Menu::printPath(const std::vector<int>& path){
     int i = 0;
-
-    double sum_path = manager.twoOptTSP(0, path);
-
     for (auto v : path){
         std::cout << v << " -> ";
         if (i % 20 == 19) std::cout << std::endl;
         i++;
     }
-    std::cout << 0 << std::endl;
+    std::cout << path[0] << std::endl;
+}
 
-    std::cout << "Sum Path is: " << sum_path << std::endl;
+int Menu::getInitialVertex() {
+    int num;
+    std::cout << "Insert first vertex: ";
+    std::cin >> num;
+    return num;
 }
 
 void Menu::start() {
