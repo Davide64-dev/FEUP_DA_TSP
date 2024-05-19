@@ -22,6 +22,8 @@ public:
 
     std::string getName() const;
 
+    int getGraphSize() const;
+
     Manager(std::string name, std::string dataset);
 
     Graph<int> prim();

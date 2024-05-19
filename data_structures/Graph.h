@@ -196,7 +196,17 @@ bool Vertex<T>::isActiveted(){
 
 template <class T>
 Edge<T>* Vertex<T>::getSpecificAdj(T in){
-    return adj.find(in)->second;
+    try {
+        auto it = adj.find(in);
+        if (it != adj.end()) {
+            return it->second;
+        } else {
+            return nullptr;
+        }
+    } catch (const std::exception& e) {
+        std::cerr << "Error accessing adjacency list: " << e.what() << std::endl;
+        return nullptr;
+    }
 }
 
 /*

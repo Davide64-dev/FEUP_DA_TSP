@@ -31,6 +31,10 @@ double Manager::haversine(double latitudeFirst, double longitudeFirst, double la
     return earthradius * c;
 }
 
+int Manager::getGraphSize() const{
+    return network.getNumVertex();
+}
+
 Manager::Manager(std::string name, std::string dataset) : name(name) {
     constructor = GraphConstructor(dataset);
     network = constructor.createGraph();
@@ -116,6 +120,7 @@ double Manager::nearestNeighbour(int initial, std::vector<int>& eulerian_circuit
     double sum = 0.0;
 
     while (eulerian_circuit.size() < network.getNumVertex()){
+        current->setVisited(true);
         auto min = INT_MAX;
         auto minNext = -1;
         for (auto e : current->getAdj()){
@@ -128,7 +133,9 @@ double Manager::nearestNeighbour(int initial, std::vector<int>& eulerian_circuit
             }
         }
         current = network.findVertex(minNext);
-        current->setVisited(true);
+        if (current == nullptr) break;
+        std::cout << "Current circuit size: " << eulerian_circuit.size() << std::endl;
+        std::cout << "Next vertex: " << minNext << std::endl;
         eulerian_circuit.push_back(minNext);
         sum += min;
     }
@@ -181,8 +188,7 @@ double Manager::distance(int vertex1, int vertex2, bool isFullyConnected) {
     auto actualVertex = network.findVertex(vertex1);
 
     auto edge = actualVertex->getSpecificAdj(vertex2);
-
-    if (edge != nullptr) return edge->getWeight();
+    if (edge != nullptr)return edge->getWeight();
 
     if (isFullyConnected) {
         double lat1 = coordinates[vertex1].first;
