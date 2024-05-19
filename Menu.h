@@ -73,6 +73,14 @@ private:
     void t24_2();
 
     /**
+     * @brief Performs tak T 2.3 - Backtracking algorithm
+     * @par Complexity
+       *   - Time: O(V!)
+       *   - Space: O(V)
+     */
+    void t24_3();
+
+    /**
      * @brief Prints the eulerian circuit in a user-friendly-way
      * @param path Path to be printed
      * @par Complexity

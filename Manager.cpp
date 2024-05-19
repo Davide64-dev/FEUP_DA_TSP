@@ -162,14 +162,15 @@ double Manager::nearestNeighbour(int initial, std::vector<int>& eulerian_circuit
     return sum;
 }
 
-void Manager::backtracking(int vertex, std::vector<int>& path, std::vector<bool>& visited, double& min_path_weight, double curr_path_weight, std::vector<int>& best_path) {
+void Manager::backtracking(int vertex, std::vector<int>& path, std::vector<bool>& visited, double& min_path_weight, double curr_path_weight, std::vector<int>& best_path, bool isFullyConnected) {
     visited[vertex] = true;
     path.push_back(vertex);
 
     if (path.size() == network.getNumVertex()) {
         auto edge = network.findVertex(path.back())->getSpecificAdj(path.front());
         if (edge) {
-            double curr_res = curr_path_weight + edge->getWeight();
+            double dist = distance(edge->getDest()->getInfo(), edge->getOrig()->getInfo(), isFullyConnected);
+            double curr_res = curr_path_weight + dist;
             if (curr_res < min_path_weight) {
                 min_path_weight = curr_res;
                 best_path = path;
@@ -191,12 +192,12 @@ void Manager::backtracking(int vertex, std::vector<int>& path, std::vector<bool>
     path.pop_back();
 }
 
-double Manager::backtrackingTSP(int initial, std::vector<int>& eulerian_circuit){
+double Manager::backtrackingTSP(int initial, std::vector<int>& eulerian_circuit, bool isFullyConnected){
     std::vector<bool> visited(network.getNumVertex(), false);
     double min_path_weight = std::numeric_limits<double>::max();
     std::vector<int> best_path;
 
-    backtracking(initial, eulerian_circuit, visited, min_path_weight, 0.0, best_path);
+    backtracking(initial, eulerian_circuit, visited, min_path_weight, 0.0, best_path, isFullyConnected);
 
     eulerian_circuit = best_path;
 

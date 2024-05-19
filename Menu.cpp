@@ -29,7 +29,8 @@ void Menu::mainMenu(){
         std::cout << "4 - T2.3 - Nearest Neighbour + 2opt" << std::endl;
         std::cout << "5 - T2.4 - Real World Graphs - Nearest Neighbour" << std::endl;
         std::cout << "6 - T2.4 - Real World Graphs - Nearest Neighbour + 2opt" << std::endl;
-        std::cout << "7 - Run all Algorithms and log to file" << std::endl;
+        std::cout << "7 - T2.4 - Real World Graphs - Backtracking Algorithm" << std::endl;
+        std::cout << "8 - Run all Algorithms and log to file" << std::endl;
         std::cout << "\nChoose an option:";
         std::cin >> option;
 
@@ -63,6 +64,9 @@ void Menu::mainMenu(){
                 break;
 
             case 7:
+                t24_3();
+
+            case 8:
                 runAllAlgorithmsAndLogIntoFile();
                 break;
 
@@ -81,7 +85,7 @@ void Menu::t21(){
     tempManager.replaceGraphToNew();
     std::vector<int> path;
 
-    double min_weight = manager.backtrackingTSP(0, path);
+    double min_weight = manager.backtrackingTSP(0, path, true);
 
     printPath(path);
     std::cout << "Sum Path is: " << min_weight << std::endl;
@@ -136,6 +140,17 @@ void Menu::t24_2(){
     std::vector<int> path;
     int ini = getInitialVertex();
     double sum_path = tempManager.twoOptTSP(ini, path, false);
+    printPath(path);
+    std::cout << "Sum Path is: " << sum_path << std::endl;
+}
+
+void Menu::t24_3(){
+    std::cout << ":: TSP :: Real World Graphs - Backtracking Algorithm ::" << std::endl;
+    Manager tempManager = manager;
+    tempManager.replaceGraphToNew();
+    std::vector<int> path;
+    int ini = getInitialVertex();
+    double sum_path = tempManager.backtrackingTSP(ini, path, false);
     printPath(path);
     std::cout << "Sum Path is: " << sum_path << std::endl;
 }

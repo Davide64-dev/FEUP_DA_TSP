@@ -113,14 +113,17 @@ public:
 
     /**
      * @brief Explores all the paths from a vertex, updates minimum path weight and best path
-     * @param vertex
-     * @param path
-     * @param visited
-     * @param min_path_weight
-     * @param curr_path_weight
-     * @param best_path
+     * @param vertex Current vertex
+     * @param path Current path
+     * @param visited Vector with the visited info
+     * @param min_path_weight The weight of the minimum path so far
+     * @param curr_path_weight The weight of the current path
+     * @param best_path The best path so far
+     * @par Complexity
+       *   - Time: O(V!)
+       *   - Space: O(V)
      */
-    void backtracking(int vertex, std::vector<int>& path, std::vector<bool>& visited, double& min_path_weight, double curr_path_weight, std::vector<int>& best_path);
+    void backtracking(int vertex, std::vector<int>& path, std::vector<bool>& visited, double& min_path_weight, double curr_path_weight, std::vector<int>& best_path, bool isFullyConnected = true);
 
     /**
      * @brief Performs the backtracking algorithm for the TSP problem
@@ -131,7 +134,7 @@ public:
        *   - Time: O(V!)
        *   - Space: O(V)
      */
-    double backtrackingTSP(int initial, std::vector<int>& eulerian_circuit);
+    double backtrackingTSP(int initial, std::vector<int>& eulerian_circuit, bool isFullyConnected = true);
 
     /**
      * @brief Performs triangular approximation algorithm for the TSP problem
