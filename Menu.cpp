@@ -26,7 +26,6 @@ void Menu::mainMenu(){
         std::cout << "2 - T2.2 - Triangular Approximation Heuristic" << std::endl;
         std::cout << "3 - T2.3 - Nearest Neighbour" << std::endl;
         std::cout << "4 - T2.3 - Nearest Neighbour + 2opt" << std::endl;
-
         std::cout << "5 - T2.4 - Real World Graphs - Nearest Neighbour" << std::endl;
         std::cout << "6 - T2.4 - Real World Graphs - Nearest Neighbour + 2opt" << std::endl;
         std::cout << "7 - Run all Algorithms and log to file" << std::endl;
@@ -71,38 +70,43 @@ void Menu::mainMenu(){
 }
 
 void Menu::t22(){
+    Manager tempManager = manager;
     std::vector<int> path;
-    double sum_path = manager.triangularApproximation(0, path);
+    double sum_path = tempManager.triangularApproximation(0, path);
     printPath(path);
     std::cout << "Sum Path is: " << sum_path << std::endl;
 }
 
 void Menu::t23_1(){
+    Manager tempManager = manager;
     std::vector<int> path;
-    double sum_path = manager.nearestNeighbour(0, path, true);
+    double sum_path = tempManager.nearestNeighbour(0, path, true);
     printPath(path);
     std::cout << "Sum Path is: " << sum_path << std::endl;
 };
 
 void Menu::t23_2(){
+    Manager tempManager = manager;
     std::vector<int> path;
-    double sum_path = manager.twoOptTSP(0, path, true);
+    double sum_path = tempManager.twoOptTSP(0, path, true);
     printPath(path);
     std::cout << "Sum Path is: " << sum_path << std::endl;
 }
 
 void Menu::t24_1(){
+    Manager tempManager = manager;
     std::vector<int> path;
     int ini = getInitialVertex();
-    double sum_path = manager.nearestNeighbour(ini, path, false);
+    double sum_path = tempManager.nearestNeighbour(ini, path, false);
     printPath(path);
     std::cout << "Sum Path is: " << sum_path << std::endl;
 }
 
 void Menu::t24_2(){
+    Manager tempManager = manager;
     std::vector<int> path;
     int ini = getInitialVertex();
-    double sum_path = manager.twoOptTSP(ini, path, false);
+    double sum_path = tempManager.twoOptTSP(ini, path, false);
     printPath(path);
     std::cout << "Sum Path is: " << sum_path << std::endl;
 }
