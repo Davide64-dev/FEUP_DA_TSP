@@ -12,9 +12,9 @@ class Menu {
 private:
     Manager manager;
     void mainMenu();
-    void t42();
-    void t44();
-    void t44_2();
+    void t22();
+    void t24();
+    void t24_2();
     void printIntro();
 
 public:

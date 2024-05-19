@@ -21,11 +21,11 @@ void Menu::mainMenu(){
 
         std::cout << "\n\t:::: MENU ::::" << std::endl;
         std::cout << "0 - Exit" << std::endl;
-        std::cout << "1 - T4.1 - Backtracking Algorithm" << std::endl;
-        std::cout << "2 - T4.2 - Triangular Approximation Heuristic" << std::endl;
+        std::cout << "1 - T2.1 - Backtracking Algorithm" << std::endl;
+        std::cout << "2 - T2.2 - Triangular Approximation Heuristic" << std::endl;
 
-        std::cout << "4 - T4.4 - Real World Graphs - Nearest Neighbour" << std::endl;
-        std::cout << "5 - T4.4 - Real World Graphs - Nearest Neighbour + 2opt" << std::endl;
+        std::cout << "4 - T2.4 - Real World Graphs - Nearest Neighbour" << std::endl;
+        std::cout << "5 - T2.4 - Real World Graphs - Nearest Neighbour + 2opt" << std::endl;
         std::cout << "\nChoose an option:";
         std::cin >> option;
 
@@ -36,15 +36,15 @@ void Menu::mainMenu(){
                 break;
 
             case 2:
-                t42();
+                t22();
                 break;
 
             case 4:
-                t44();
+                t24();
                 break;
 
             case 5:
-                t44_2();
+                t24_2();
                 break;
 
             default:
@@ -55,7 +55,7 @@ void Menu::mainMenu(){
     }
 }
 
-void Menu::t42(){
+void Menu::t22(){
     int i = 0;
 
     std::vector<int> path;
@@ -73,7 +73,7 @@ void Menu::t42(){
     std::cout << "Sum Path is: " << sum_path << std::endl;
 }
 
-void Menu::t44(){
+void Menu::t24(){
     std::vector<int> path;
     int i = 0;
 
@@ -89,7 +89,7 @@ void Menu::t44(){
     std::cout << "Sum Path is: " << sum_path << std::endl;
 }
 
-void Menu::t44_2(){
+void Menu::t24_2(){
     std::vector<int> path;
     int i = 0;
 
