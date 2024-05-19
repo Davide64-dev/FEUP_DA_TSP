@@ -21,11 +21,11 @@ void Menu::mainMenu(){
 
         std::cout << "\n\t:::: MENU ::::" << std::endl;
         std::cout << "0 - Exit" << std::endl;
-        std::cout << "1 - T4.1 - Backtracking Algorithm" << std::endl;
-        std::cout << "2 - T4.2 - Triangular Approximation Heuristic" << std::endl;
+        std::cout << "1 - T2.1 - Backtracking Algorithm" << std::endl;
+        std::cout << "2 - T2.2 - Triangular Approximation Heuristic" << std::endl;
 
-        std::cout << "4 - T4.4 - Real World Graphs - Nearest Neighbour" << std::endl;
-        std::cout << "5 - T4.4 - Real World Graphs - Nearest Neighbour + 2opt" << std::endl;
+        std::cout << "4 - T2.4 - Real World Graphs - Nearest Neighbour" << std::endl;
+        std::cout << "5 - T2.4 - Real World Graphs - Nearest Neighbour + 2opt" << std::endl;
         std::cout << "\nChoose an option:";
         std::cin >> option;
 
@@ -33,6 +33,10 @@ void Menu::mainMenu(){
 
             case 0:
                 std::cout << "Exiting... :)" << std::endl;
+                break;
+
+            case 1:
+                t41();
                 break;
 
             case 2:
@@ -53,6 +57,28 @@ void Menu::mainMenu(){
 
         }
     }
+}
+
+void Menu::t41(){
+    std::cout << ":: TSP :: Backtracking Algorithm ::" << std::endl;
+    std::cout << ":: Dataset: " << manager.getName() << std::endl;
+
+    std::vector<int> path;
+    int i = 0;
+
+    double min_weight = manager.backtrackingTSP(0, path);
+
+    std::cout << "\nPath: " << std::endl;
+
+    for (auto v : path){
+        std::cout << v << " -> ";
+        if (i % 20 == 19) std::cout << std::endl;
+        i++;
+    }
+
+    std::cout << 0 << std::endl;
+
+    std::cout << "\nMin Path Weight: " << min_weight << std::endl;
 }
 
 void Menu::t42(){

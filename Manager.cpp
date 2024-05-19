@@ -3,6 +3,7 @@
 //
 
 #include <unordered_set>
+#include <cmath>
 #include "Manager.h"
 
 std::string Manager::getName() const{
@@ -137,6 +138,48 @@ double Manager::nearestNeighbour(int initial, std::vector<int>& eulerian_circuit
 
 
     return sum;
+}
+
+void Manager::backtracking(int vertex, std::vector<int>& path, std::vector<bool>& visited, double& min_path_weight, double curr_path_weight, std::vector<int>& best_path) {
+    visited[vertex] = true;
+    path.push_back(vertex);
+
+    if (path.size() == network.getNumVertex()) {
+        auto edge = network.findVertex(path.back())->getSpecificAdj(path.front());
+        if (edge) {
+            double curr_res = curr_path_weight + edge->getWeight();
+            if (curr_res < min_path_weight) {
+                min_path_weight = curr_res;
+                best_path = path;
+            }
+        }
+        visited[vertex] = false;
+        path.pop_back();
+        return;
+    }
+
+    for (auto& edge : network.findVertex(vertex)->getAdj()) {
+        int next_vertex = edge->getDest()->getInfo();
+        if (!visited[next_vertex] && curr_path_weight + edge->getWeight() < min_path_weight) {
+            backtracking(next_vertex, path, visited, min_path_weight, curr_path_weight + edge->getWeight(), best_path);
+        }
+    }
+
+    // Backtracking
+    visited[vertex] = false;
+    path.pop_back();
+}
+
+double Manager::backtrackingTSP(int initial, std::vector<int>& eulerian_circuit){
+    std::vector<bool> visited(network.getNumVertex(), false);
+    double min_path_weight = std::numeric_limits<double>::max();
+    std::vector<int> best_path;
+
+    backtracking(initial, eulerian_circuit, visited, min_path_weight, 0.0, best_path);
+
+    eulerian_circuit = best_path;
+
+    return min_path_weight;
 }
 
 double Manager::triangularApproximation(int initial, std::vector<int>& eulerian_circuit){

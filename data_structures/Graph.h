@@ -9,6 +9,7 @@
 #include <queue>
 #include <limits>
 #include <algorithm>
+#include <unordered_map>
 #include "../data_structures/MutablePriorityQueue.h"
 
 template <class T>

@@ -12,6 +12,7 @@ class Menu {
 private:
     Manager manager;
     void mainMenu();
+    void t41();
     void t42();
     void t44();
     void t44_2();

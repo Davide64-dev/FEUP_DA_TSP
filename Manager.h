@@ -26,6 +26,10 @@ public:
 
     Graph<int> prim();
 
+    void backtracking(int vertex, std::vector<int>& path, std::vector<bool>& visited, double& min_path_weight, double curr_path_weight, std::vector<int>& best_path);
+
+    double backtrackingTSP(int initial, std::vector<int>& eulerian_circuit);
+
     double triangularApproximation(int initial, std::vector<int>& eulerian_circuit);
 
     double nearestNeighbour(int initial, std::vector<int>& eulerian_circuit);

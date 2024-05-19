@@ -4,7 +4,7 @@
 #include "Menu.h"
 
 int main() {
-    Manager manager = Manager("temp", "graph1");
+    Manager manager = Manager("Toy Graph Stadiums", "stadiums");
 
     Menu menu = Menu(manager);
 
